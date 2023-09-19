@@ -14,10 +14,14 @@
     "@nuxtjs/eslint-config-typescript": "^12.1.0",
     "@nuxtjs/supabase": "^1.1.0",
     "eslint": "^8.49.0",
-    "nuxt": "^3.7.3"
+    "nuxt": "^3.7.3",
+    "prisma": "^5.3.1"
   },
   "dependencies": {
     "@iconify-json/carbon": "^1.1.21",
-    "@nuxt/ui": "^2.8.1"
+    "@nuxt/ui": "^2.8.1",
+    "@prisma/client": "^5.3.1",
+    "class-variance-authority": "^0.7.0",
+    "tailwind-merge": "^1.14.0"
   }
 }

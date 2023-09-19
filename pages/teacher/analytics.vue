@@ -3,7 +3,5 @@
 </script>
 
 <template>
-  <div class="text-red-400">
-    Hello
-  </div>
+  <div>Analytics</div>
 </template>

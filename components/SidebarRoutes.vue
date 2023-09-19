@@ -1,14 +1,33 @@
 <script setup lang="ts">
+const route = useRoute()
+
+const isTeacherPage = computed(() => route.path.startsWith('/teacher'))
+
+const routes = computed(() => isTeacherPage.value ? teacherRoutes : guestRoutes)
+
 const guestRoutes = [
   {
-    icon: '',
+    icon: 'i-carbon-dashboard',
     label: 'Dashboard',
     href: '/'
   },
   {
-    icon: '',
+    icon: 'i-carbon-compass',
     label: 'Browse',
     href: '/search'
+  }
+]
+
+const teacherRoutes = [
+  {
+    icon: 'i-carbon-courses',
+    label: 'Courses',
+    href: '/teacher/courses'
+  },
+  {
+    icon: 'i-carbon-analytics',
+    label: 'Analytics',
+    href: '/teacher/analytics'
   }
 ]
 </script>
@@ -16,11 +35,11 @@ const guestRoutes = [
 <template>
   <div class="flex flex-col w-full">
     <SidebarItem
-      v-for="route in guestRoutes"
-      :key="route.href"
-      :icon="route.icon"
-      :label="route.label"
-      :href="route.href"
+      v-for="item in routes"
+      :key="item.href"
+      :icon="item.icon"
+      :label="item.label"
+      :href="item.href"
     />
   </div>
 </template>
