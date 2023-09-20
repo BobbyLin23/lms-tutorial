@@ -1,21 +1,21 @@
 <script setup lang="ts">
-import { prisma } from '~/utils/prisma'
+import { Course } from '@prisma/client'
 
 const route = useRoute()
 const user = useSupabaseUser()
 
-const course = await prisma.course.findUnique({
-  where: {
-    id: route.params.id as string
-  }
+const { data } = await useFetch('/api/courses/' + route.params.id, {
+  method: 'GET'
 })
 
+const course = ref<Course | undefined>(data.value?.course)
+
 const requiredFields = [
-  course?.title,
-  course?.description,
-  course?.imageUrl,
-  course?.price,
-  course?.categoryId
+  course.value?.title,
+  course.value?.description,
+  course.value?.imageUrl,
+  course.value?.price,
+  course.value?.categoryId
 ]
 
 const totalFields = requiredFields.length
@@ -25,9 +25,6 @@ const completionText = `(${completedFields}/${totalFields})`
 
 onMounted(() => {
   if (!user.value) {
-    navigateTo('/')
-  }
-  if (!course) {
     navigateTo('/')
   }
 })
@@ -53,6 +50,7 @@ onMounted(() => {
             Customize your course
           </h2>
         </div>
+        <TitleForm :course-id="course?.id" :title="course?.title" />
       </div>
     </div>
   </div>

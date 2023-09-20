@@ -4,7 +4,8 @@ import { prisma } from '~/utils/prisma'
 export default defineEventHandler(async (event) => {
   try {
     const user = await serverSupabaseUser(event)
-    const body = await readBody(event)
+    const courseId = getRouterParam(event, 'courseId')
+    const values = await readBody(event)
 
     if (!user) {
       return createError({
@@ -13,10 +14,13 @@ export default defineEventHandler(async (event) => {
       })
     }
 
-    const course = await prisma.course.create({
+    const course = await prisma.course.update({
+      where: {
+        id: courseId,
+        userId: user.id
+      },
       data: {
-        userId: user.id,
-        title: body.title
+        title: values.title
       }
     })
 

@@ -20,7 +20,7 @@ const guestRoutes = [
 
 const teacherRoutes = [
   {
-    icon: 'i-carbon-courses',
+    icon: 'i-carbon-course',
     label: 'Courses',
     href: '/teacher/courses'
   },
