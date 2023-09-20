@@ -1,3 +1,4 @@
+import superjson from 'superjson'
 import { prisma } from '~/utils/prisma'
 
 export default defineEventHandler(async (event) => {
@@ -15,6 +16,10 @@ export default defineEventHandler(async (event) => {
       id: courseId
     }
   })
+
+  if (!course) {
+    return null
+  }
 
   return {
     course

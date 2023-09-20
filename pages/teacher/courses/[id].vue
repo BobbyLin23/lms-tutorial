@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Course } from '@prisma/client'
+import ImageForm from '~/components/ImageForm.vue'
 
 const route = useRoute()
 const user = useSupabaseUser()
@@ -51,6 +52,8 @@ onMounted(() => {
           </h2>
         </div>
         <TitleForm :course-id="course?.id" :title="course?.title" />
+        <DescriptionForm :course-id="course?.id" :description="course?.description" />
+        <ImageForm :image-url="course?.imageUrl" :course-id="course?.id" />
       </div>
     </div>
   </div>

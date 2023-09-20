@@ -20,7 +20,7 @@ export default defineEventHandler(async (event) => {
         userId: user.id
       },
       data: {
-        title: values.title
+        ...values
       }
     })
 
