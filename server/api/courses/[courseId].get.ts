@@ -22,9 +22,15 @@ export default defineEventHandler(async (event) => {
 
   const course = await prisma.course.findUnique({
     where: {
-      id: courseId
+      id: courseId,
+      userId: user.id
     },
     include: {
+      chapters: {
+        orderBy: {
+          position: 'asc'
+        }
+      },
       attachments: {
         orderBy: {
           createdAt: 'desc'

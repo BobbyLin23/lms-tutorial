@@ -12,6 +12,20 @@ export interface Category {
     name: string
 }
 
+export interface Chapter {
+    id: string
+    title: string
+    description: string
+    videoUrl: string
+    position: number
+    isPublished: boolean
+    isFree: boolean
+    courseId: string
+    createdAt: string
+    updatedAt: string
+    muxDataId: string
+}
+
 export interface Course {
     id: string
     userId: string
@@ -23,4 +37,7 @@ export interface Course {
     categoryId?: string
     createdAt: string
     updatedAt: string
+    attachments: Attachment[]
+    category: Category[]
+    chapters: any[]
 }

@@ -16,7 +16,8 @@ const requiredFields = [
   course.value?.description,
   course.value?.imageUrl,
   course.value?.price,
-  course.value?.categoryId
+  course.value?.categoryId,
+  course.value?.chapters.some(chapter => chapter.isPublished)
 ]
 
 const totalFields = requiredFields.length
@@ -72,9 +73,7 @@ onMounted(() => {
               Course Chapter
             </h2>
           </div>
-          <div>
-            TODO Chapters
-          </div>
+          <DescriptionForm :course-id="course?.id" :description="course?.description" />
         </div>
         <div class="flex items-center gap-x-2">
           <IconBadge icon="i-carbon-currency-dollar" />
