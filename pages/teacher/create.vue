@@ -1,4 +1,6 @@
 <script setup lang="ts">
+// @ts-ignore
+import type { Course } from '@prisma/client'
 import { FormError, FormSubmitEvent } from '@nuxt/ui/dist/runtime/types'
 
 const toast = useToast()
@@ -18,11 +20,11 @@ const validate = (state: any): FormError[] => {
 const submit = async (event: FormSubmitEvent<any>) => {
   try {
     loading.value = true
-    const res = await useFetch('/api/courses', {
+    const { data } = await useFetch<Course>('/api/courses', {
       method: 'POST',
       body: event.data
     })
-    navigateTo(`/teacher/courses/${res.data.value?.course.id}`)
+    navigateTo(`/teacher/courses/${data.value?.id}`)
     toast.add({
       title: 'Course created',
       icon: 'i-heroicons-check-circle'
@@ -57,7 +59,7 @@ const submit = async (event: FormSubmitEvent<any>) => {
         <UFormGroup label="Course title" name="title">
           <UInput
             v-model="form.title"
-            :disabled="loading"
+            :loading="loading"
             placeholder="e.g. Advanced web development"
           />
         </UFormGroup>
@@ -65,7 +67,7 @@ const submit = async (event: FormSubmitEvent<any>) => {
           <UButton variant="ghost" type="button" @click="$router.push('/')">
             Cancel
           </UButton>
-          <UButton color="black" type="submit" :disabled="loading">
+          <UButton color="black" type="submit" :loading="loading">
             Submit
           </UButton>
         </div>

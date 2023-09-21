@@ -14,5 +14,16 @@ export default defineNuxtConfig({
       callback: '/confirm',
       exclude: ['/register']
     }
-  }
+  },
+  runtimeConfig: {
+    public: {
+      SUPABASE_URL: process.env.SUPABASE_URL,
+      SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY
+    }
+  },
+  components: [
+    '~/components',
+    { path: '~/components/layout', pathPrefix: false },
+    { path: '~/components/form', pathPrefix: false }
+  ]
 })

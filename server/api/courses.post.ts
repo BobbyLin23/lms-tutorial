@@ -13,14 +13,12 @@ export default defineEventHandler(async (event) => {
       })
     }
 
-    const course = await prisma.course.create({
+    return await prisma.course.create({
       data: {
         userId: user.id,
         title: body.title
       }
     })
-
-    return { course }
   } catch (error) {
     throw createError({
       statusCode: 500,

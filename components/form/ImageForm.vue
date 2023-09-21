@@ -1,8 +1,10 @@
 <script setup lang="ts">
 const props = defineProps<{
   courseId: string
-  imageUrl: string
+  imageUrl: string | null
 }>()
+
+const config = useRuntimeConfig()
 
 const toast = useToast()
 
@@ -20,7 +22,7 @@ const handleUpload = async (path: string) => {
     })
     return
   }
-  const imageUrl = process.env.SUPABASE_URL + '/storage/v1/object/public/lms-store/public/' + path
+  const imageUrl = config.public.SUPABASE_URL + '/storage/v1/object/public/lms-store/public/' + path
   await useFetch(`/api/courses/${props.courseId}`, {
     method: 'PATCH',
     body: {
@@ -28,9 +30,10 @@ const handleUpload = async (path: string) => {
     }
   })
   toast.add({
-    title: 'Course updated',
+    title: 'Image updated',
     icon: 'i-heroicons-check-circle'
   })
+  window.location.reload()
 }
 </script>
 
@@ -64,9 +67,7 @@ const handleUpload = async (path: string) => {
       </div>
     </div>
     <div v-else>
-      <div>
-        <FileUpload @upload="handleUpload" />
-      </div>
+      <FileUpload @upload="handleUpload" />
       <div class="text-xs text-neutral-600 mt-4">
         16:9 aspect ratio recommended
       </div>

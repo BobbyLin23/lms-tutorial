@@ -3,7 +3,7 @@ import type { FormError, FormSubmitEvent } from '@nuxt/ui/dist/runtime/types'
 
 const props = defineProps<{
   courseId: string
-  description: string
+  description: string | null
 }>()
 
 const toast = useToast()

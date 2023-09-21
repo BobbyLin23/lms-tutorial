@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import { Course } from '@prisma/client'
-import ImageForm from '~/components/ImageForm.vue'
+// @ts-ignore
+import type { Course, Category } from '@prisma/client'
+import ImageForm from '~/components/form/ImageForm.vue'
+import CategoryForm from '~/components/form/CategoryForm.vue'
 
 const route = useRoute()
 const user = useSupabaseUser()
 
-const { data } = await useFetch('/api/courses/' + route.params.id, {
+const { data: course } = await useFetch<Course>('/api/courses/' + route.params.id, {
   method: 'GET'
 })
-
-const course = ref<Course | undefined>(data.value?.course)
 
 const requiredFields = [
   course.value?.title,
@@ -23,6 +23,10 @@ const totalFields = requiredFields.length
 const completedFields = requiredFields.filter(Boolean).length
 
 const completionText = `(${completedFields}/${totalFields})`
+
+const { data: categories } = await useFetch<Category[]>('/api/categories', {
+  method: 'GET'
+})
 
 onMounted(() => {
   if (!user.value) {
@@ -54,6 +58,40 @@ onMounted(() => {
         <TitleForm :course-id="course?.id" :title="course?.title" />
         <DescriptionForm :course-id="course?.id" :description="course?.description" />
         <ImageForm :image-url="course?.imageUrl" :course-id="course?.id" />
+        <CategoryForm
+          :options="categories?.map((category) => ({ label: category.name, value: category.id }))"
+          :course-id="course?.id"
+          :category-id="course?.categoryId"
+        />
+      </div>
+      <div class="space-y-6">
+        <div>
+          <div class="flex items-center gap-x-2">
+            <IconBadge icon="i-carbon-list-checked" />
+            <h2 class="text-xl">
+              Course Chapter
+            </h2>
+          </div>
+          <div>
+            TODO Chapters
+          </div>
+        </div>
+        <div class="flex items-center gap-x-2">
+          <IconBadge icon="i-carbon-currency-dollar" />
+          <h2 class="text-xl">
+            Sell your course
+          </h2>
+        </div>
+        <PriceForm :course-id="course?.id" :price="course?.price" />
+      </div>
+      <div>
+        <div class="flex items-center gap-x-2">
+          <IconBadge icon="i-carbon-document-blank" />
+          <h2 class="text-xl">
+            Resources & Attachments
+          </h2>
+        </div>
+        <AttachmentForm :attachments="course?.attachments" :course-id="course?.id" />
       </div>
     </div>
   </div>
