@@ -1,28 +1,31 @@
 <script setup lang="ts">
 import type { FormError, FormSubmitEvent } from '@nuxt/ui/dist/runtime/types'
+// @ts-ignore
+import type { Chapter } from '@prisma/client'
 
 const props = defineProps<{
   courseId: string
-  description: string | null
+  chapters: Chapter[]
 }>()
 
 const toast = useToast()
 
 const state = ref({
-  description: ''
+  title: ''
 })
 
 const loading = ref(false)
-const isEdit = ref(false)
+const isCreating = ref(false)
+const isUpdating = ref(false)
 
-const toggleEdit = () => {
-  isEdit.value = !isEdit.value
+const toggleCreating = () => {
+  isCreating.value = !isCreating.value
 }
 
 const validate = (state: any): FormError[] => {
   const errors = []
-  if (!state.description) {
-    errors.push({ path: 'description', message: 'Required' })
+  if (!state.title) {
+    errors.push({ path: 'title', message: 'Required' })
   }
   return errors
 }
@@ -30,17 +33,17 @@ const validate = (state: any): FormError[] => {
 const submit = async (event: FormSubmitEvent<any>) => {
   try {
     loading.value = true
-    await useFetch(`/api/courses/${props.courseId}`, {
+    await useFetch('/api/courses/' + props.courseId + '/chapters', {
       body: {
-        description: event.data.description
+        title: event.data.title
       },
-      method: 'PATCH'
+      method: 'POST'
     })
     toast.add({
-      title: 'Course updated',
+      title: 'Chapter created',
       icon: 'i-heroicons-check-circle'
     })
-    toggleEdit()
+    toggleCreating()
     window.location.reload()
   } catch (error) {
     toast.add({
@@ -56,34 +59,29 @@ const submit = async (event: FormSubmitEvent<any>) => {
 <template>
   <div class="mt-6 border bg-slate-100 rounded-md p-4">
     <div class="font-medium flex items-center justify-between">
-      Course Description
-      <UButton variant="ghost" @click="toggleEdit">
-        <div v-if="isEdit">
+      Course Chapters
+      <UButton variant="ghost" @click="toggleCreating">
+        <div v-if="isCreating">
           Cancel
         </div>
         <div v-else class="flex items-center gap-x-2">
-          <UIcon class="h-4 w-4 mr-2" name="i-carbon-edit" />
-          <span>Edit description</span>
+          <UIcon class="h-4 w-4 mr-2" name="i-carbon-add-alt" />
+          <span>Add a chapter</span>
         </div>
       </UButton>
     </div>
-    <div v-if="!isEdit">
-      <p class="text-sm mt-2" :class="!description && 'text-slate-500 italic'">
-        {{ description || 'No description' }}
-      </p>
-    </div>
-    <div v-else>
+    <div v-if="isCreating">
       <UForm
         class="space-y-4 mt-4"
         :validate="validate"
         :state="state"
         @submit="submit"
       >
-        <UFormGroup label="Description" name="description">
-          <UTextarea
-            v-model="state.description"
+        <UFormGroup label="Title" name="title">
+          <UInput
+            v-model="state.title"
             :disabled="loading"
-            placeholder="e.g. 'This course is about...'"
+            placeholder="e.g. 'Introduction to the chapter...'"
           />
         </UFormGroup>
         <div class="flex items-center gap-x-2">
@@ -91,10 +89,23 @@ const submit = async (event: FormSubmitEvent<any>) => {
             type="submit"
             :loading="loading"
             color="black"
-            label="Save"
+            label="Create"
           />
         </div>
       </UForm>
+    </div>
+    <div
+      v-if="!isCreating"
+      class="text-sm mt-2"
+      :class="!chapters.length && 'text-slate-600 italic'"
+    >
+      <div v-if="!chapters.length">
+        No chapters
+      </div>
+      <ChaptersList v-else :chapters="chapters" />
+      <p class="text-xs text-neutral-600 mt-4">
+        Drag and drop to reorder the chapters
+      </p>
     </div>
   </div>
 </template>

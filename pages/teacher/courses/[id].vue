@@ -73,7 +73,7 @@ onMounted(() => {
               Course Chapter
             </h2>
           </div>
-          <DescriptionForm :course-id="course?.id" :description="course?.description" />
+          <ChapterForm :course-id="course?.id" :chapters="course?.chapters" />
         </div>
         <div class="flex items-center gap-x-2">
           <IconBadge icon="i-carbon-currency-dollar" />
