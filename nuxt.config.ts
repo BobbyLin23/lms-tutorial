@@ -25,5 +25,11 @@ export default defineNuxtConfig({
     '~/components',
     { path: '~/components/layout', pathPrefix: false },
     { path: '~/components/form', pathPrefix: false }
-  ]
+  ],
+  app: {
+    pageTransition: {
+      name: 'page',
+      mode: 'out-in'
+    }
+  }
 })
